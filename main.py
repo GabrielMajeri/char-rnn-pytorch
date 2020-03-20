@@ -1,4 +1,5 @@
 from itertools import count
+from pathlib import Path
 import string
 
 import numpy as np
@@ -16,6 +17,8 @@ ALPHABET_SIZE = len(ALPHABET) + 1
 HIDDEN_SIZE = 16
 
 BATCH_SIZE = 1024
+
+MODEL_SAVE_PATH = Path('./char_rnn.pth')
 
 indices = count()
 lookup = {char: next(indices) for char in ALPHABET}
@@ -47,6 +50,12 @@ input_length = len(input_text)
 net = RNN(input_size=ALPHABET_SIZE,
           hidden_size=HIDDEN_SIZE,
           output_size=ALPHABET_SIZE)
+
+if MODEL_SAVE_PATH.exists():
+    print("Loading trained model from file")
+    net.load_state_dict(torch.load(MODEL_SAVE_PATH))
+
+net.train()
 
 optimizer = optim.RMSprop(net.parameters())
 
@@ -90,3 +99,7 @@ while i < input_length:
     hidden_state = hidden_state.detach()
 
     i += BATCH_SIZE
+
+torch.save(net.state_dict(), MODEL_SAVE_PATH)
+
+net.eval()
