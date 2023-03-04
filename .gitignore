@@ -1,2 +1,8 @@
+# Ignore the Python virtual environment directory
+/.venv/
+
+# Ignore Python interpreter cache files
 **/__pycache__/
+
+# Ignore saved PyTorch models
 *.pth
