@@ -18,7 +18,7 @@ HIDDEN_SIZE = 16
 
 BATCH_SIZE = 1024
 
-MODEL_SAVE_PATH = Path('./char_rnn.pth')
+MODEL_SAVE_PATH = Path("./char_rnn.pth")
 
 indices = count()
 lookup = {char: next(indices) for char in ALPHABET}
@@ -40,16 +40,16 @@ try:
         input_text = fin.read()
 except FileNotFoundError as e:
     print(e)
-    print("Please download the input data from 'https://cs.stanford.edu/people/karpathy/char-rnn/'")
+    print(
+        "Please download the input data from 'https://cs.stanford.edu/people/karpathy/char-rnn/'"
+    )
     print("Place it in the 'input' directory")
     exit(1)
 
 input_length = len(input_text)
 
 
-net = RNN(input_size=ALPHABET_SIZE,
-          hidden_size=HIDDEN_SIZE,
-          output_size=ALPHABET_SIZE)
+net = RNN(input_size=ALPHABET_SIZE, hidden_size=HIDDEN_SIZE, output_size=ALPHABET_SIZE)
 
 if MODEL_SAVE_PATH.exists():
     print("Loading trained model from file")
@@ -57,7 +57,7 @@ if MODEL_SAVE_PATH.exists():
 
 net.train()
 
-optimizer = optim.RMSprop(net.parameters())
+optimizer = optim.RMSprop(net.parameters(), lr=1e-3)
 
 hidden_state = torch.zeros(BATCH_SIZE, HIDDEN_SIZE)
 
@@ -73,10 +73,9 @@ while i < input_length:
 
     start, end = i, i + BATCH_SIZE
     chars = input_text[start:end]
-    next_chars = input_text[start + 1:end + 1]
+    next_chars = input_text[start + 1 : end + 1]
 
-    chars_tensor = torch.stack(
-        tuple(map(one_hot_encode, map(char_to_index, chars))))
+    chars_tensor = torch.stack(tuple(map(one_hot_encode, map(char_to_index, chars))))
     next_chars_index = tuple(map(char_to_index, next_chars))
     next_chars_tensor = torch.tensor(next_chars_index)
 
@@ -90,7 +89,7 @@ while i < input_length:
     loss = loss.item()
     total_loss += loss
 
-    if i - last_print > 1000:
+    if i - last_print > 10_000:
         print(total_loss / i)
         last_print = i
 
