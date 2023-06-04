@@ -4,5 +4,9 @@
 # Ignore Python interpreter cache files
 **/__pycache__/
 
+# Ignore saved numpy arrays
+*.npy
+
 # Ignore saved PyTorch models
+*.pt
 *.pth
